@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: afinder
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/$POSTGRESDB_DATABASE
+      - SPRING_DATASOURCE_USERNAME=$POSTGRESDB_USER
+      - SPRING_DATASOURCE_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - SPRING_PROFILES_ACTIVE=prod
+
+  db:
+    image: 'postgres:16.4'
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRESDB_DATABASE
